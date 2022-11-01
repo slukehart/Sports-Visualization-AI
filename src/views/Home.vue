@@ -42,7 +42,6 @@
 <script>
 // @ is an alias to /src
 import HelloHome from '@/components/HelloHome.vue';
-import axios from 'axios';
 
 
 

@@ -1,14 +1,18 @@
 
-
+const axios = require(axios);
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.js'
 
+import Vue from 'vue'
 
+Vue.prototype.$http = axios;
 
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
+
 import App from './App.vue'
+
 
 
 // // Import Bootstrap and BootstrapVue CSS files (order is important)
@@ -21,6 +25,8 @@ import '@fortawesome/fontawesome-free/js/all'
 import Home from '../src/views/Home.vue'
 import Dashboard from '../src/views/Dashboard.vue'
 import About from '../src/views/About.vue'
+
+
 
  const router = createRouter({
   history: createWebHistory(),
@@ -51,5 +57,5 @@ import About from '../src/views/About.vue'
 const app = createApp(App);
 
 
-app.use(router);
+app.use(Vue, router, axios);
 app.mount('#app');

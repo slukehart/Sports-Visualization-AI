@@ -6,7 +6,17 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
+   
+
   },
+  "keywords": [
+    "nodejs",
+    "express",
+    "sequalize",
+    "rest",
+    "api",
+    "postgresql"
+  ],
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.2.0",
     "@popperjs/core": "^2.11.6",
@@ -16,10 +26,15 @@
     "buffer": "^6.0.3",
     "cfb.js": "^4.3.2",
     "core-js": "^3.8.3",
+    "cors": "^2.8.5",
     "d3": "^7.6.1",
+    "express": "^4.18.2",
     "fetch": "^1.1.0",
     "https": "^1.0.0",
+    "pg": "^8.8.0",
+    "pg-hstore": "^2.3.4",
     "request": "^2.88.2",
+    "sequelize": "^6.25.0",
     "vue": "^3.2.40",
     "vue-axios": "^3.4.1",
     "vue-router": "^4.1.5"
