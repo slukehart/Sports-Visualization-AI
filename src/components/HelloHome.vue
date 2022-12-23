@@ -1,15 +1,20 @@
 <template>
-    <h1 style="font-family: proximaNovaBlack; color: black">API </h1>
-</template>
+     <h1 style="font-family: proximaNovaBlack; color: black;"> Top 25 Rankings </h1>
+
+     <table>
+    <tr v-for="(team, index) in teams" :key="team">
+      <td v-if="index % 5 === 0" style="font-family: proximaNovaNormal; padding: 5px;">
+       <tr>{{ index + 1 }}. {{ team }}</tr> 
+      </td>
+      <td v-else style="font-family: proximaNovaNormal; padding: 5px;">
+        <tr>{{ index + 1 }}. {{ team }}</tr> 
+      </td>
+    </tr>
+  </table>
+  </template>
+  
 
 <script>
-
-import axios from 'axios';
-//import { schoolArray, getData }from '../components/http'
-
-
-
-
 
 
 export default  {
@@ -18,6 +23,7 @@ export default  {
     data () {
         return{
             
+            teams: []
         };
        
         
@@ -26,57 +32,37 @@ export default  {
       return {}
 
     },
+    computed: {
+    groups() {
+      const groups = [];
+      for (let i = 0; i < this.teams.length; i += 5) {
+        groups.push(this.teams.slice(i, i + 5));
+      }
+      return groups;
+    }
+  },
+    async mounted(){
+        this.getData();
+
+    },
+
 
     methods:{
 
-          async getData() {
-            let schoolArray = [];
+        async getData() {
 
-            console.log(hello);
-
-        try {
-            await axios.get('https://api.sportsdata.io/v3/cfb/scores/json/LeagueHierarchy', 
-            {headers: { 
-            'Ocp-Apim-Subscription-Key': '	009e5ab66d044f2bbf3de7afe1b7e39f',
-            'content-type' : 'application/json',   
-            'accept' :'application/json',
-            
-            
-            
-      }}).then((res) => {
-          
-          
-        console.log(res);
-         let test = res.data[0].polls[0].ranks;
-         for (let i = 0; i < test.length; i++) {
-            schoolArray.push(test[i].school);
-         }
-
-   
-   
-        console.log(schoolArray);
-         
-         
-        })
-
-       
-        
-
-        return schoolArray
-
-        }catch(e) {
-            console.log(error.response);
+            const res = await fetch('http://localhost:8080/topteams')
+                try{
+                let data = await res.json();
+                console.log(JSON.stringify(data));
+                let webP = data
+                this.teams = webP;
+                
+                }catch(e){
+                    console.log("error " + e);
+                }
+           
         }
- 
-
-    
-
-
-    } 
-
-
-
-
 
     }
 }
@@ -96,7 +82,11 @@ export default  {
 
 </script>
 
-<style>
+<style scoped>
+.break {
+    flex-basis: 100%;
+    height: 0;
+}
 
 
 </style>

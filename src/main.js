@@ -1,12 +1,10 @@
 
-const axios = require(axios);
+//const axios = require(axios);
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.js'
 
-import Vue from 'vue'
 
-Vue.prototype.$http = axios;
 
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
@@ -57,5 +55,5 @@ import About from '../src/views/About.vue'
 const app = createApp(App);
 
 
-app.use(Vue, router, axios);
+app.use(router);
 app.mount('#app');

@@ -19,15 +19,9 @@
   </div>
   <div class="container-sm" style = "background-color: #008EF5; margin-top: 50px; border-radius: 25px;"> 
     <div class="row row-cols-2 row-cols-md-2 g-4 border-radius-sm">
-      <div class="col">
-       
-          <img src = "@/assets/bijan.png" class = "rounded float-start">
-
-
-        
-      </div>
-      <div class="col">
-        <div class="col-body" style="background: rgba(255, 255, 255, 0.25); border-radius: 25px;">
+     
+      <div class="col" >
+        <div class="col-body" style="margin-bottom: 50px; background: rgba(255, 255, 255, 0.25); border-radius: 25px;">
           <HelloHome/>
 
         </div>

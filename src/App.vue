@@ -15,6 +15,7 @@
   import SidebarView from '@/components/sidebar/SidebarView.vue'
   import { sidebarWidth} from '@/components/sidebar/state'
   import Home from '@/views/Home.vue'
+  import HelloHome from './components/HelloHome.vue'
   // import axios from 'axios'
   // import VueAxios from 'vue-axios'
 
@@ -29,7 +30,8 @@ export default {
   name: 'App',
   components: {
     SidebarView,
-    Home
+    Home,
+    HelloHome
     
     
   },
@@ -43,38 +45,16 @@ export default {
     return { sidebarWidth }
 
   },
-  async mounted() {
-    console.log("mounted");
-    console.log( this.getData());
-    console.log("left mounted");
+   mounted() {
 
   },
   methods:{
 
-    async getData() {
-      try {
-        const response = await this.$http.get(
-          "https://api.collegefootballdata.com/rankings?year=2022&week=8&seasonType=regular",
-          {headers: {
-            'Authorization' : 'Bearer gWAxje/I1VJVLWcuTef5cOMXahi04GUjWYzz+qNxCTJAhwqq7959bLb4TYoK5QH5'
-
-          }
-      });
-        // JSON responses are automatically parsed.
-        this.posts = response.data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  },
-
-  created() {
-    this.getData();
-  }
 
    
 
   }
+}
 
 
 
