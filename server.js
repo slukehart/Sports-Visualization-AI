@@ -15,18 +15,15 @@ var options = {
     'Authorization': 'Bearer gWAxje/I1VJVLWcuTef5cOMXahi04GUjWYzz+qNxCTJAhwqq7959bLb4TYoK5QH5'
   }
 };
-//this request will return the top 25 ranked schools formatted from 1-25
-// request(options, function (error, response) {
-//   if (error) throw new Error(error);
-//   //console.log(response.body);
-//   data = JSON.parse(response.body);
-//   console.log(data[0].polls[0].ranks);
-//   ranks = data[0].polls[0].ranks
-//   for (const rank of ranks) {
-//     schoolArray.push(rank.school);
-//     console.log(rank.school);
-//   }
-// });
+var options2 = {
+  'method': 'GET',
+  'url': 'https://api.collegefootballdata.com/rankings?year=2022&week=14&seasonType=regular',
+  'headers': {
+    'Authorization': 'Bearer gWAxje/I1VJVLWcuTef5cOMXahi04GUjWYzz+qNxCTJAhwqq7959bLb4TYoK5QH5'
+  }
+};
+
+
 
 
 
@@ -73,6 +70,26 @@ app.get("/topteams", (req, res) => {
 
   
 }); 
+
+app.get("/previousrank", (req, res) => {
+  let schoolArray = [];
+  request(options2, function (error, response) {
+    if (error) throw new Error(error);
+    //console.log(response.body);
+    data = JSON.parse(response.body);
+    console.log(data[0].polls[0].ranks);
+    ranks = data[0].polls[0].ranks
+    for (const rank of ranks) {
+      schoolArray.push(rank.school);
+      console.log(rank.school);
+    }
+    res.json(schoolArray);
+  });
+  console.log(schoolArray);
+
+  
+}); 
+
 require("./app/routes/routes")(app);
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
