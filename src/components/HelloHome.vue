@@ -1,22 +1,31 @@
-<template>
+<template xmlns="http://www.w3.org/1999/html" >
      <h1 style="font-family: proximaNovaBlack; color: black;"> Top 25 Rankings </h1>
 
-     <table>
-    <tr v-for="(currentTeam, index) in currentTeams" :key="currentTeam">
-      <td v-if="index % 5 === 0" style="font-family: proximaNovaNormal; padding: 5px;">
-       <tr>{{ index + 1 }}. {{ currentTeam }}</tr> 
-      </td>
-      <td v-else style="font-family: proximaNovaNormal; padding: 5px;">
-        <tr>{{ index + 1 }}. {{ currentTeam }}</tr> 
-      </td>
+  <table style="margin-left: 20px; margin-bottom: 20px">
+    <tr  v-for="(currentTeam, index, item) in teamsPreviousRank" :key="currentTeam" >
+    <td>
+    <tr v-if="currentTeam > item"> {{item + 1}} {{ index }}
+      <font-awesome-icon id = "icon" icon="fa-solid fa-arrow-up"  @mouseenter="showSpan(index)" @mouseleave="hideSpan(index)" style="color: green;" />
+      <span v-show="showSpanIndex === index"  class="hidden-text"> previous rank: {{ currentTeam + 1 }}</span></tr>
+    <tr v-else-if="currentTeam < item"> {{item + 1}} {{ index }}
+      <font-awesome-icon id = "icon" icon="fa-solid fa-arrow-down" @mouseenter="showSpan(index)" @mouseleave="hideSpan(index)" style="color: red;" />
+      <span v-show="showSpanIndex === index"  class="hidden-text"> previous rank: {{ currentTeam + 1 }}</span> </tr>
+    <tr v-else-if="currentTeam === item"> {{item + 1}} {{ index }}
+      <font-awesome-icon id = "icon" icon="fa-solid fa-minus" @mouseenter="showSpan(index)" @mouseleave="hideSpan(index)"/>    <span v-show="showSpanIndex === index"  class="hidden-text"> Same Rank</span></tr>
+    <tr v-else> {{item + 1}} {{ index }}
+      <font-awesome-icon id = "icon" icon="fa-solid fa-minus" @mouseenter="showSpan(index)" @mouseleave="hideSpan(index)"/>   <span v-show="showSpanIndex === index"  class="hidden-text"> Previously Not in top 25</span>
+    </tr>
+    </td>
     </tr>
   </table>
 
-  
+
   </template>
   
 
 <script>
+
+
 
 
 
@@ -28,7 +37,9 @@ export default  {
             
             currentTeams: [],
             prevTeams: [],
-            location: new Map()
+            location: {},
+            teamsPreviousRank:{},
+            showSpanIndex: null,
         };
        
         
@@ -38,70 +49,130 @@ export default  {
 
     },
     computed: {
-   
+      columns() {
+        return this.teamsPreviousRank.reduce((acc, currentTeam, index) => {
+          const rowIndex = Math.floor(index / 5);
+          if (!acc[rowIndex]) {
+            acc[rowIndex] = [];
+          }
+          acc[rowIndex].push(currentTeam);
+          return acc;
+        }, []);
+      }
+
   },
     async mounted(){
-        this.getDataOfCurrent();
-        this.getDataOfLast();
+       await this.getDataOfCurrent();
+        await this.getDataOfLast();
+       await  this.findLocation();
+       await  this.createMapArray();
+       
        
         
 
     },
-  
-    created() {
-        this.location = this.findLocation(this.currentTeams, this.prevTeams);
+  methods: {
+
+    async getDataOfCurrent() {
+      const res = await fetch('http://localhost:8080/topteams')
+      try {
+        //console.log("Curr rank" + JSON.stringify(currData));
+
+        this.currentTeams = await res.json();
+
+      } catch (e) {
+        console.log("error " + e);
+      }
+
+      return this.currentTeams;
 
     },
 
+    async getDataOfLast() {
 
-    methods:{
+      const res = await fetch('http://localhost:8080/previousrank')
+      try {
+        //console.log("Prev rank" + JSON.stringify(prevData));
 
-        async getDataOfCurrent() {
+        this.prevTeams = await res.json();
 
-            const res = await fetch('http://localhost:8080/topteams')
-                try{
-                let currData = await res.json();
-                //console.log("Curr rank" + JSON.stringify(currData));
-            
-                this.currentTeams = currData;
-                
-                }catch(e){
-                    console.log("error " + e);
-                }
+      } catch (e) {
+        console.log("error " + e);
+      }
+      return this.prevTeams;
 
-                
-           
-        },
+    },
+    async findLocation() {
+      let currData = await this.getDataOfCurrent();
+      let prevTeams = await this.getDataOfLast();
+      let currJson = {};
+      let prevJson = {};
+      let finalJson = {};
 
-        async getDataOfLast() {
-            
-            const res = await fetch('http://localhost:8080/previousrank')
-                try{
-                let prevData = await res.json();
-                //console.log("Prev rank" + JSON.stringify(prevData));
-                
-                this.prevTeams = prevData;
-                
-                }catch(e){
-                    console.log("error " + e);
-                }
 
-        },
-        findLocation(currentTeams, prevTeams) {
-        console.log("Current" + currentTeams.join(', '));
-        console.log("Prev" + prevTeams);
-        for (let element  of prevTeams) {
-            let index = currentTeams.indexOf(element)
-            if (index !== -1) {
-            this.location.set(element, index)
-            }
+      for (let i = 0; i < prevTeams.length; i++) {
+
+        currJson[currData[i]] = i;
+        prevJson[prevTeams[i]] = i;
+
+
+      }
+
+      for (let key in currJson) {
+        let current_stand = 0;
+        let prev_stand = 0;
+        current_stand = currJson[key];
+        try {
+          prev_stand = prevJson[key];
+          if (current_stand > prev_stand) {
+            finalJson[key] = 'down';
+          } else if (current_stand === prev_stand) {
+            finalJson[key] = 'no change'
+          } else if (current_stand < prev_stand) {
+            finalJson[key] = 'up'
+          } else {
+            finalJson[key] = "not previously ranked"
+          }
+
+        } catch (e) {
+          console.log(e)
+          //finalJson[key] = "not previously ranked"
         }
-       console.log(this.location)
-       return this.location;
-     
-    }
+      }
 
+      console.log(JSON.stringify(finalJson));
+
+      this.location = finalJson;
+      return this.location;
+
+    },
+    async createMapArray() {
+      let currData = await this.getDataOfCurrent();
+      let prevTeams = await this.getDataOfLast();
+      let valueMap = {};
+      for (let i = 0; i < currData.length; i++) {
+        let index = prevTeams.indexOf(currData[i]);
+        if (index !== -1) {
+          valueMap[currData[i]] = index;
+        } else {
+          valueMap[currData[i]] = 'Not in top 25 ';
+        }
+      }
+      console.log(JSON.stringify(valueMap));
+      this.teamsPreviousRank = valueMap;
+      return this.teamsPreviousRank;
+
+
+    },
+    showSpan(index) {
+      this.showSpanIndex = index;
+    },
+    hideSpan() {
+      this.showSpanIndex = null;
     }
+  }
+   
+       
 }
 
 
@@ -120,10 +191,19 @@ export default  {
 </script>
 
 <style scoped>
-.break {
-    flex-basis: 100%;
-    height: 0;
-}
+
+.hidden-text {
+  /* some styles for the hover text  */
+  position: absolute;
+    height: 7%;
+    width: 150px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+
+    margin-left: 20px;
+    padding: 5px;
+    border-radius: 5px;
+} 
 
 
 </style>

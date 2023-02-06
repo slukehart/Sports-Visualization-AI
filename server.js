@@ -62,11 +62,11 @@ app.get("/topteams", (req, res) => {
     ranks = data[0].polls[0].ranks
     for (const rank of ranks) {
       schoolArray.push(rank.school);
-      console.log(rank.school);
+
     }
     res.json(schoolArray);
   });
-  console.log(schoolArray);
+
 
   
 }); 
@@ -81,11 +81,11 @@ app.get("/previousrank", (req, res) => {
     ranks = data[0].polls[0].ranks
     for (const rank of ranks) {
       schoolArray.push(rank.school);
-      console.log(rank.school);
+
     }
     res.json(schoolArray);
   });
-  console.log(schoolArray);
+
 
   
 }); 
