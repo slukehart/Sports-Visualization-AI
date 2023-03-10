@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  //import * as d3 from "d3";
+  import * as d3 from "d3";
   import SidebarView from '@/components/sidebar/SidebarView.vue'
   import { sidebarWidth} from '@/components/sidebar/state'
   import Home from '@/views/Home.vue'

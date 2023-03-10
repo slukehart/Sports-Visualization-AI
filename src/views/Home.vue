@@ -28,20 +28,38 @@
        
       </div>
 
+
     </div>
   </div>
- 
+  <div class="container-sm" style = "background-color: #008EF5; margin-top: 50px; border-radius: 25px;">
+
+
+      <div id="barChart" class="col">
+        <div class="col-body" style="margin: 50px; padding: 20px">
+
+          <QuarterbackPieChart/>
+
+
+
+      </div>
+
+    </div>
+  </div>
+
 </template>
 
 <script>
 // @ is an alias to /src
 import HelloHome from '@/components/HelloHome.vue';
+import QuarterbackPieChart from "@/components/QuarterbackPieChart.vue";
 
 
 
 export default {
+  // eslint-disable-next-line vue/multi-word-component-names
   name: 'Home',
   components: {
+    QuarterbackPieChart,
    HelloHome
   }
 
@@ -49,8 +67,10 @@ export default {
 }
 </script>
 
-<style scoped> 
-
+<style scoped>
+#barChart{
+  width: auto;
+}
 .bg-mycolor{
   background-color: #008EF5;
 }

@@ -6,7 +6,8 @@
     <td>
     <tr v-if="currentTeam > item"> {{item + 1}} {{ index }}
       <font-awesome-icon id = "icon" icon="fa-solid fa-arrow-up"  @mouseenter="showSpan(index)" @mouseleave="hideSpan(index)" style="color: green;" />
-      <span v-show="showSpanIndex === index"  class="hidden-text"> previous rank: {{ currentTeam + 1 }}</span></tr>
+      <span v-show="showSpanIndex === index"  class="hidden-text"> previous rank: {{ currentTeam + 1 }}</span>
+      </tr>
     <tr v-else-if="currentTeam < item"> {{item + 1}} {{ index }}
       <font-awesome-icon id = "icon" icon="fa-solid fa-arrow-down" @mouseenter="showSpan(index)" @mouseleave="hideSpan(index)" style="color: red;" />
       <span v-show="showSpanIndex === index"  class="hidden-text"> previous rank: {{ currentTeam + 1 }}</span> </tr>
@@ -195,8 +196,8 @@ export default  {
 .hidden-text {
   /* some styles for the hover text  */
   position: absolute;
-    height: 7%;
-    width: 150px;
+    height: auto;
+    width: auto;
     background-color: rgba(0, 0, 0, 0.5);
     color: white;
 
