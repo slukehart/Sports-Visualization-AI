@@ -22,7 +22,7 @@
      
       <div class="col" >
         <div class="col-body" style="margin-bottom: 50px; background: rgba(255, 255, 255, 0.25); border-radius: 25px;">
-          <HelloHome/>
+          <TopTwentyFive/>
 
         </div>
        
@@ -31,14 +31,20 @@
 
     </div>
   </div>
-  <div class="container-sm" style = "background-color: #008EF5; margin-top: 50px; border-radius: 25px;">
+  <div class="container-sm" style = "background-color: #008EF5; margin-top: 50px; border-radius: 25px; margin-bottom: 50px; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;">
 
 
-      <div id="barChart" class="col">
-        <div class="col-body" style="margin: 50px; padding: 20px">
 
-          <QuarterbackPieChart/>
+    <div id="top5Chart" class="col">
+      <div class="col-body" style="padding: 20px;display: flex;flex-wrap: wrap;align-content: center;">
+        <TopFive_PassingQb/>
 
+      </div>
+    </div>
+    <div id="barChart" class="col">
+      <div class="col-body" style="padding: 20px;display: flex;flex-wrap: wrap;align-content: center;">
+
+        <QuarterbackBarChart/>
 
 
       </div>
@@ -50,8 +56,9 @@
 
 <script>
 // @ is an alias to /src
-import HelloHome from '@/components/HelloHome.vue';
-import QuarterbackPieChart from "@/components/QuarterbackPieChart.vue";
+import TopTwentyFive from '@/components/Football_Components/TopTwentyFive.vue';
+import QuarterbackBarChart from "@/components/Football_Components/QuarterbackBarChart.vue";
+import TopFive_PassingQb from "@/components/Football_Components/TopFive_PassingQb.vue";
 
 
 
@@ -59,8 +66,10 @@ export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'Home',
   components: {
-    QuarterbackPieChart,
-   HelloHome
+    QuarterbackBarChart,
+    TopTwentyFive,
+    TopFive_PassingQb
+
   }
 
   

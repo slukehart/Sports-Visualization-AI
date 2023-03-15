@@ -31,6 +31,14 @@ let passingOptions = {
   }
 
 };
+let passingYardsOptions = {
+  'method': 'GET',
+  'url': 'https://api.collegefootballdata.com/stats/player/season?year=2022&startWeek=1&endWeek=15&category=passing',
+  'headers': {
+    'Authorization': 'Bearer gWAxje/I1VJVLWcuTef5cOMXahi04GUjWYzz+qNxCTJAhwqq7959bLb4TYoK5QH5'
+  }
+
+};
 
 
 
@@ -116,20 +124,59 @@ app.get("/passingcompletion", (req, res) =>{
         playersPct.push(inData);
       }
     });
-
-
-   responsePCT = passingCompletions.map(function (item){
+    responsePCT = passingCompletions.map(function (item){
     return playersPct.find(function(j){
       return j.player === item;
     })
     }).map(function(j) {
       return { name: j.player, team:j.team, PCT: j.stat };
     });
-    console.log("Response length  " + responsePCT.length);
+
     res.json(responsePCT)
 
 
   });
+
+
+});
+
+app.get("/passingyardsqb", (req, res) => {
+  let passingYards = [];
+  let passingYards_Completions = [];
+  let top5 = [];
+  request(passingYardsOptions, (error, response) => {
+    if (error) throw new Error(error);
+    let ydsData = JSON.parse(response.body);
+      ydsData.forEach((element) =>{
+      if (element.statType === 'COMPLETIONS' && element.stat > 75){
+        passingYards_Completions.push(element.player)
+      }
+    })
+    ydsData.forEach((element) => {
+      if (element.statType === 'YDS') {
+        passingYards.push(element);
+      }
+    })
+
+
+    let responseYDS = passingYards_Completions.map(function (item){
+      return passingYards.find(function(j){
+        return j.player === item;
+      })
+    }).map(function(j) {
+      return { name: j.player, team:j.team, YDS: j.stat };
+    });
+      responseYDS.sort((a, b) => a.YDS - b.YDS).reverse();
+      for (let i =0; i < 5; i++){
+        top5.push(responseYDS[i]);
+      }
+
+
+    res.json(top5);
+
+
+
+  })
 
 
 });

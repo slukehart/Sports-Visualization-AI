@@ -15,7 +15,7 @@
   import SidebarView from '@/components/sidebar/SidebarView.vue'
   import { sidebarWidth} from '@/components/sidebar/state'
   import Home from '@/views/Home.vue'
-  import HelloHome from './components/HelloHome.vue'
+  import HelloHome from './components/Football_Components/TopTwentyFive.vue'
   // import axios from 'axios'
   // import VueAxios from 'vue-axios'
 
