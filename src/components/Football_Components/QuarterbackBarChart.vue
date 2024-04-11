@@ -1,8 +1,16 @@
+
 <template>
-  <div id="col-body"> </div>
+  <div style="display: flex; flex-direction: column; align-items: start">
+  <div style="display: flex; padding-bottom: 20px;">
+    <input id="search-input" class="searchTerm" style="height: 40px; border-color: transparent" v-model="searchName" placeholder="Search">
+    <button id="submitButton" class="button-6"> submit</button>
+    <button id="clearButton" style="background-color: transparent; border-color: transparent"><font-awesome-icon :icon="['fas', 'xmark']" style="color: #ffffff; background-color: transparent; height: 30px; display: flex"/> </button>
+  </div>
+
+  <div id="qb-body">  </div>
 <!--  <p style="color: white">{{quarterBackList}}</p>-->
 
-
+  </div>
 </template>
 
 <script>
@@ -17,7 +25,9 @@ export default {
   name: 'QuarterbackBarChart',
   data() {
     return {
-      quarterBackList: []
+      quarterBackList: [],
+      searchName: '',
+      searchArray: []
     }
   },
 
@@ -44,10 +54,24 @@ export default {
       data.sort((a, b) => a.PCT - b.PCT)
       // console.log(JSON.stringify(data));
 
+      let windowHeight = window.innerHeight;
+      let windowWidth = window.innerWidth;
       let pctArray =[];
+      window.addEventListener('resize', function(event) {
+        windowWidth = window.innerWidth;
+        windowHeight = window.innerHeight;
+        console.log(windowWidth)
+
+
+
+      });
+
+        // Do something with the window width, such as updating the chart
+
+      console.log('Outside Window width: ' + windowWidth);
       let margin = { top: 40, right: 20, bottom: 60, left: 80 };
-      let width = 600 - margin.left - margin.right;
-      let height = 350 - margin.top - margin.bottom;
+      let width = ((windowWidth / 2) + 125) - margin.left - margin.right;
+      let height = ((windowHeight / 2) + 125) - margin.top - margin.bottom;
      for (let i = 0; i < data.length; i++)  {
           pctArray.push(data[i].PCT * 100)
       }
@@ -58,17 +82,17 @@ export default {
      }
 
 
-      let svg =  d3.select('#col-body')
+      let svg =  d3.select('#qb-body')
           .append('svg')
           .attr('width', width + margin.left + margin.right)
           .attr('height', height + margin.top + margin.bottom)
           .style('background', "white")
           .style('border-radius', '20px');
       svg.append("text")
-          .attr("x", width - 200)
+          .attr("x", width / 2 + 50)
           .attr("y", 20)
           .attr("text-anchor", "middle")
-          .style("font-size", "12px")
+          .style("font-size", (windowWidth / 100) + "px")
           .text("NCAA Quarterback Completion Percentage for Quarterbacks With Over 75 completions for the 2022 Season");
       svg.append("text")
           .attr("transform", "rotate(-90)")
@@ -78,7 +102,7 @@ export default {
           .style('margin-left', '30px')
           .text("Quarterback Percentage out of 100");
       svg.append("text")
-          .attr('x', width - 200)
+          .attr('x', width / 2 + 50)
           .attr('y', height + 80)
           .style("text-anchor", "middle")
           .style('margin-left', '30px')
@@ -122,7 +146,7 @@ export default {
           .attr('fill', '#324F71')
           .on('mouseover', function(d, i, nodes) {
             let value;
-            d3.select(this).attr("fill", "#715432").html(d).text(function (d, i, nodes){
+            d3.select(this).attr("fill", "red").html(d).text(function (d, i, nodes){
               value = nodes[i].__data__ ; //get the value of the element that is setting the height of rect
               return value;
             })
@@ -144,7 +168,7 @@ export default {
             // hide the tooltip
             tooltip.style('opacity', 0);
           });
-      let tooltip = d3.select('#col-body')
+      let tooltip = d3.select('#qb-body')
           .append('div')
           .classed('tooltip', true)
           .attr("class", "tooltip")
@@ -159,9 +183,49 @@ export default {
           .style('border', '1px solid white')
           .style('opacity', 0);
 
+      document.querySelector('#submitButton').addEventListener('click', function (d, i, nodes) {
+
+        const searchQuery = document.querySelector('#search-input').value.toLowerCase();
+        console.log(searchQuery);
+        const index = data.findIndex(d => d.name.toLowerCase() === searchQuery);
+        console.log("Index" + JSON.stringify(data[index]));
+
+
+        if (index !== -1) {
+          // Select corresponding bar element and change color
+          const bar = d3.select(`.bar:nth-child(${index + 3})`);
+          bar.style('fill', 'red');
+
+
+          tooltip
+              .html("Name: " + data[index].name + "<br>College: " + data[index].team + "<br>Completion Percentage: " + (data[index].PCT * 100).toPrecision(3) + "%").transition().duration(500)
+              .attr("text-anchor", "middle")
+              .style('opacity', 1);
+
+        }else {
+          tooltip.html("Player not found").transition().duration(500).attr("text-anchor", "middle").style('opacity', 1)
+
+          console.log("player not found")
+        }
+
+
+      });
+      document.querySelector('#clearButton').addEventListener('click', function () {
+        // Reset bar colors
+        d3.selectAll('.bar')
+            .style('fill', '#324F71');
+
+        // Hide tooltip
+        tooltip.style('opacity', 0);
+        document.querySelector('#search-input').value = '';
+      });
+
+
       return svg;
 
-    },
+    }
+
+
 
 
   },
@@ -238,6 +302,70 @@ rect:hover {
 
 .tooltip p {
   margin: 0;
+}
+
+
+.searchTerm {
+  width: 100%;
+  border: 3px solid #00B4CC;
+  border-right: none;
+  padding: 5px;
+  height: 20px;
+  border-radius: 5px 0 0 5px;
+  outline: none;
+  color: #9DBFAF;
+}
+
+.searchTerm:focus{
+  color: black;
+}
+
+
+/* CSS */
+.button-6 {
+  align-items: center;
+  background-color: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: .25rem;
+  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+  box-sizing: border-box;
+  color: rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: system-ui,-apple-system,system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  justify-content: center;
+  height: 40px;
+  margin: 0 10px 10px 10px;
+  padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+  position: relative;
+  text-decoration: none;
+  transition: all 250ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  width: auto;
+}
+
+.button-6:hover,
+.button-6:focus {
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.button-6:hover {
+  transform: translateY(-1px);
+}
+
+.button-6:active {
+  background-color: #F0F0F1;
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
+  color: rgba(0, 0, 0, 0.65);
+  transform: translateY(0);
 }
 
 

@@ -1,16 +1,16 @@
 <template>
 
-    <div class = "sidebar" :style = "{ width: sidebarWidth}">
+    <div class = "sidebar" :style = "{ width: sidebarWidth}" style="margin-right: 100px">
       <div class="title" >
-      <i class="signin fa-solid fa-user" ></i>
+
        <h2>
-      <span v-if="collapsed" style = "padding: 10px;  ">
-        <div>C</div>
-        <div>F</div>
-        <div>A</div>
+      <span v-if="collapsed">
+        <div>S</div>
+        <div>V</div>
+        <div>Z</div>
       </span>
       
-      <span v-else>College Football App</span>
+      <span v-else style="">Sports Visualization</span>
       
     </h2> 
   </div>
@@ -70,16 +70,17 @@
   display: flex;
   flex-direction: column;
   font-family: proximaNovaBlack;
+     width: 100%;
 }
 .sidebar h2 {
   padding-top: 0%;
   padding-bottom: 15px;
-  margin: 10px;
-  margin-top: 0px;
-  
+  font-size: 1.5rem;
+
 }
 .title{
-  display: inline-flex;
+  display: flex;
+  flex-direction: column;
   
 }
 .collapse-icon {
@@ -96,11 +97,6 @@
   transition: 0.2s linear;
 }
 
-.signin {
-  float: center;
-  position: fixed;
-  padding: 12px;
-}
 
 
 @media screen and (max-width: 380px){

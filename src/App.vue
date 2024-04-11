@@ -1,9 +1,7 @@
 <template>
- 
-  <SidebarView/>
-  <div :style = "{ 'margin-left':sidebarWidth}"> 
-  <router-view></router-view>
-  
+ <div>
+<Home/>
+
   </div>
 
   

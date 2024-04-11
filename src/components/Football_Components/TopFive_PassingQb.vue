@@ -36,11 +36,22 @@ export default {
         dataArray.push(parseInt(data[i].YDS))
 
       }
+      console.log(JSON.stringify(data))
 console.log(dataArray.reverse())
       dataArray.reverse();
+
+      let windowHeight = window.innerHeight;
+      let windowWidth = window.innerWidth;
+      window.addEventListener('resize', function(event) {
+        windowWidth = window.innerWidth;
+        windowHeight = window.innerHeight;
+
+
+
+      });
       let margin = {top: 50, right: 90, bottom: 50, left: 140},
-          width = 600 - margin.left - margin.right,
-          height = 350 - margin.top - margin.bottom;
+          width = ((windowWidth / 2) + 100) - margin.left - margin.right,
+          height = ((windowHeight/ 2) + 100) - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
       let svg = d3.select("#top-five-body")
@@ -50,7 +61,7 @@ console.log(dataArray.reverse())
           .style('background', "white")
           .style('border-radius', '20px');
       svg.append("text")
-          .attr("x", width - margin.right + 20)
+          .attr("x", width / 2 + 100)
           .attr("y", margin.top - 20)
           .attr("text-anchor", "middle")
           .style("font-size", "16px")
@@ -67,12 +78,10 @@ console.log(dataArray.reverse())
           .paddingOuter(.5);
 
       let maxXValue = d3.max(data, d => +d.YDS) + 500;
-      console.log(maxXValue)
       let xScale = d3.scaleLinear()
           .domain([0, maxXValue])
           .range([0, width]);
-      console.log("Data"+ data[0].YDS)
-      console.log(xScale(+data[0].YDS))
+
 
 // create a left-aligned y-axis based on your y-scale
       let yAxis = d3.axisLeft().scale(yScale).tickSizeOuter(0);
@@ -100,7 +109,7 @@ console.log(dataArray.reverse())
           .attr("fill", "#324F71")
           .on('mouseover', function(d, i)  {
             d3.select(this)
-                .attr("fill", "#715432")
+                .attr("fill", "red")
             let index = data.indexOf(d3.select(this).data()[0]); //identify the data source based on the first value that is stored in data()
             let correspondingDataName = data[index].name;
             let correspondingDataTeam = data[index].team;

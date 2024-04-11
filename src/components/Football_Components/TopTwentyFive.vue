@@ -1,10 +1,10 @@
 <template xmlns="http://www.w3.org/1999/html" >
-     <h1 style="font-family: proximaNovaBlack; color: black;"> Top 25 Rankings </h1>
+     <h1 style="font-family: proximaNovaBlack; color: black; margin: 30px"> Top 25 Rankings </h1>
 
-  <table style="margin-left: 20px; margin-bottom: 20px">
-    <tr  v-for="(currentTeam, index, item) in teamsPreviousRank" :key="currentTeam" >
+  <table  v-for="(currentTeam, index, item) in teamsPreviousRank" :key="currentTeam" style="margin-left: 20px; margin-bottom: 20px; max-width: 500px;" >
+    <tr>
     <td>
-    <tr v-if="currentTeam > item"> {{item + 1}} {{ index }}
+       <tr v-if="currentTeam > item"> {{item + 1}} {{ index }}
       <font-awesome-icon id = "icon" icon="fa-solid fa-arrow-up"  @mouseenter="showSpan(index)" @mouseleave="hideSpan(index)" style="color: green;" />
       <span v-show="showSpanIndex === index"  class="hidden-text"> previous rank: {{ currentTeam + 1 }}</span>
       </tr>
@@ -159,7 +159,7 @@ export default  {
           valueMap[currData[i]] = 'Not in top 25 ';
         }
       }
-      console.log(JSON.stringify(valueMap));
+      console.log("Hello Map" + JSON.stringify(valueMap));
       this.teamsPreviousRank = valueMap;
       return this.teamsPreviousRank;
 
@@ -204,7 +204,7 @@ export default  {
     margin-left: 20px;
     padding: 5px;
     border-radius: 5px;
-} 
+}
 
 
 </style>

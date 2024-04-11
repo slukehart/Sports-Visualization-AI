@@ -12,14 +12,14 @@ var options = {
   'method': 'GET',
   'url': 'https://api.collegefootballdata.com/rankings?year=2022&week=15&seasonType=regular',
   'headers': {
-    'Authorization': 'Bearer gWAxje/I1VJVLWcuTef5cOMXahi04GUjWYzz+qNxCTJAhwqq7959bLb4TYoK5QH5'
+    'Authorization': 'Bearer AFXkjZ+iPS2Sl7kAIaxBIpSCEqCiC97sisLNdBIP2hVWQibggDCOnTJgOdcuYk5J'
   }
 };
 var options2 = {
   'method': 'GET',
   'url': 'https://api.collegefootballdata.com/rankings?year=2022&week=14&seasonType=regular',
   'headers': {
-    'Authorization': 'Bearer gWAxje/I1VJVLWcuTef5cOMXahi04GUjWYzz+qNxCTJAhwqq7959bLb4TYoK5QH5'
+    'Authorization': 'Bearer AFXkjZ+iPS2Sl7kAIaxBIpSCEqCiC97sisLNdBIP2hVWQibggDCOnTJgOdcuYk5J'
   }
 };
 
@@ -27,7 +27,7 @@ let passingOptions = {
   'method': 'GET',
   'url': 'https://api.collegefootballdata.com/stats/player/season?year=2022&startWeek=1&endWeek=15&category=passing',
   'headers': {
-    'Authorization': 'Bearer gWAxje/I1VJVLWcuTef5cOMXahi04GUjWYzz+qNxCTJAhwqq7959bLb4TYoK5QH5'
+    'Authorization': 'Bearer AFXkjZ+iPS2Sl7kAIaxBIpSCEqCiC97sisLNdBIP2hVWQibggDCOnTJgOdcuYk5J'
   }
 
 };
@@ -35,7 +35,17 @@ let passingYardsOptions = {
   'method': 'GET',
   'url': 'https://api.collegefootballdata.com/stats/player/season?year=2022&startWeek=1&endWeek=15&category=passing',
   'headers': {
-    'Authorization': 'Bearer gWAxje/I1VJVLWcuTef5cOMXahi04GUjWYzz+qNxCTJAhwqq7959bLb4TYoK5QH5'
+    'Authorization': 'Bearer AFXkjZ+iPS2Sl7kAIaxBIpSCEqCiC97sisLNdBIP2hVWQibggDCOnTJgOdcuYk5J'
+  }
+
+};
+
+
+let passingOptionsWeek1 = {
+  'method': 'GET',
+  'url': 'https://api.collegefootballdata.com/stats/player/season?year=2022&startWeek=1&endWeek=1&seasonType=regular&category=passing',
+  'headers': {
+    'Authorization': 'Bearer AFXkjZ+iPS2Sl7kAIaxBIpSCEqCiC97sisLNdBIP2hVWQibggDCOnTJgOdcuYk5J'
   }
 
 };
@@ -180,6 +190,81 @@ app.get("/passingyardsqb", (req, res) => {
 
 
 });
+
+app.get('/qbrcalculations', (req, res) => {
+  let a;
+  let b;
+  let c;
+  let d;
+  let playerMap;
+  playerMap = {
+    player: "",
+    comp: "",
+    yds: "",
+    td: "",
+    att: "",
+    int: ""
+  };
+  let playerList = [];
+  request(passingOptionsWeek1, (error, response)=>{
+    if (error) throw new Error(error);
+    let player = JSON.parse(response.body);
+    player.forEach((element) => {
+      if (element.playerId > 1) {
+        playerList.push(element)
+      }
+
+    })
+// Initialize an empty object to store all the player maps
+    const allPlayerMaps = {};
+
+// Loop through each element in the array
+    for (let element of playerList) {
+      // Get the playerId and check if a player map for this playerId has already been created
+      const playerId = element.playerId;
+      if (!allPlayerMaps[playerId]) {
+        // If a player map for this playerId has not been created yet, create a new one
+        allPlayerMaps[playerId] = {
+          player: "",
+          team: "",
+          completions: "",
+          yds: "",
+          td: "",
+          att: "",
+          int: ""
+        };
+      }
+
+      // Set the values in the player map if they are not already set
+      if (!allPlayerMaps[playerId].player) {
+        allPlayerMaps[playerId].player = element.player;
+      }
+      if (!allPlayerMaps[playerId].team) {
+        allPlayerMaps[playerId].team = element.team;
+      }
+      if (!allPlayerMaps[playerId].completions && element.statType === "COMPLETIONS") {
+        allPlayerMaps[playerId].completions = element.stat;
+      }
+      if (!allPlayerMaps[playerId].yds && element.statType === "YDS") {
+        allPlayerMaps[playerId].yds = element.stat;
+      }
+      if (!allPlayerMaps[playerId].td && element.statType === "TD") {
+        allPlayerMaps[playerId].td = element.stat;
+      }
+      if (!allPlayerMaps[playerId].att && element.statType === "ATT") {
+        allPlayerMaps[playerId].att = element.stat;
+      }
+      if (!allPlayerMaps[playerId].int && element.statType === "INT") {
+        allPlayerMaps[playerId].int = element.stat;
+      }
+    }
+    console.log(allPlayerMaps)
+
+
+    res.json(allPlayerMaps)
+  })
+
+})
 
 
 require("./app/routes/routes")(app);
